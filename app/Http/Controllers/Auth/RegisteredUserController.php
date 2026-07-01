@@ -66,6 +66,6 @@ class RegisteredUserController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return redirect()->route('home')->with('success', 'Account created successfully.');
+        return redirect()->route('welcome')->with('success', 'Account created successfully.');
     }
 }

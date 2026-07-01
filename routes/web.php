@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
@@ -17,28 +16,25 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-
 /*
 |--------------------------------------------------------------------------
-| Dashboard
+| Dashboard (Admin Only)
 |--------------------------------------------------------------------------
 */
 
 Route::get('/dashboard', [AdminController::class, 'dashboard'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'isAdmin'])
     ->name('dashboard');
-
 
 /*
 |--------------------------------------------------------------------------
-| Home
+| Home (Logged users)
 |--------------------------------------------------------------------------
 */
 
 Route::get('/home', [HomeController::class, 'index'])
-    ->middleware('auth')
+    ->middleware(['auth', 'isAdmin'])
     ->name('home');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -58,43 +54,34 @@ Route::middleware('auth')->group(function () {
         ->name('profile.destroy');
 });
 
-
 /*
 |--------------------------------------------------------------------------
-| Authentication Routes
+| Auth Routes
 |--------------------------------------------------------------------------
 */
 
 require __DIR__ . '/auth.php';
 
-
 /*
 |--------------------------------------------------------------------------
-| Admin Routes
+| Admin/User Management (Admin Only)
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'CheckAuth'])->group(function () {
+Route::middleware(['auth', 'isAdmin'])->group(function () {
 
-    Route::get('/user', [UserController::class, 'index'])
-        ->name('user');
+    Route::get('/user', [UserController::class, 'index'])->name('user');
 
-    Route::get('/user/show/{id}', [UserController::class, 'show'])
-        ->name('user.show');
+    Route::get('/user/show/{id}', [UserController::class, 'show'])->name('user.show');
 
-    Route::get('/user/delete/{id}', [UserController::class, 'delete'])
-        ->name('user.delete');
+    Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
 
-    Route::get('/user/create', [UserController::class, 'create'])
-        ->name('user.create');
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
 
-    Route::post('/user/store', [UserController::class, 'store'])
-        ->name('user.store');
+    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
 
-    Route::get('/user/edit/{id}', [UserController::class, 'edit'])
-        ->name('user.edit');
+    Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
 
-    Route::put('/user/update/{id}', [UserController::class, 'update'])
-        ->name('user.update');
+    Route::put('/user/update/{id}', [UserController::class, 'update'])->name('user.update');
 
 });

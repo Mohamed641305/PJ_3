@@ -80,9 +80,7 @@
                                 <i class="fas fa-user-shield"></i>
                             </div>
 
-                            <h2 class="mb-3 fw-bold">
-                                Welcome Back 👋
-                            </h2>
+                            <h2 class="mb-3 fw-bold">Welcome Back 👋</h2>
 
                             <p class="opacity-75">
                                 Login to access your dashboard and manage your system easily.
@@ -97,14 +95,19 @@
                                 Login
                             </h3>
 
+                            {{-- Error Message --}}
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
 
                                 <!-- Email -->
                                 <div class="mb-3">
-                                    <label class="form-label">
-                                        Email Address
-                                    </label>
+                                    <label class="form-label">Email Address</label>
 
                                     <input id="email" type="email"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
@@ -119,9 +122,7 @@
 
                                 <!-- Password -->
                                 <div class="mb-3">
-                                    <label class="form-label">
-                                        Password
-                                    </label>
+                                    <label class="form-label">Password</label>
 
                                     <input id="password" type="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
@@ -152,28 +153,24 @@
                                     </button>
                                 </div>
 
-                                <!-- Register Link -->
-                                <div class="p-3 mt-4 text-center">
-
+                                <!-- Register -->
+                                <div class="mt-4 text-center">
                                     <p class="mb-0 text-muted">
                                         Don’t have an account?
                                         <a href="{{ route('register') }}" class="fw-bold text-decoration-none">
                                             Create Account
                                         </a>
                                     </p>
-
                                 </div>
 
                                 <!-- Forgot Password -->
                                 @if (Route::has('password.request'))
-                                    <div class="text-center">
+                                    <div class="mt-2 text-center">
                                         <a href="{{ route('password.request') }}" class="text-decoration-none">
                                             Forgot Your Password?
                                         </a>
                                     </div>
                                 @endif
-
-
 
                             </form>
 

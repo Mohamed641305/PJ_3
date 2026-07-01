@@ -7,17 +7,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckAuth
-{
-
-    public function handle(Request $request, Closure $next): Response
-    {
-        if (Auth::user() && Auth::user()->role == 'admin') {
-            return $next($request);
-        }elseif (Auth::user() && Auth::user()->role == 'user') {
-            return redirect()->route('home')->with('error', 'You do not have permission to access this page.');
-        }else {
-            return redirect()->route('login')->with('error', 'You must be logged in to access this page.');
+class CheckAuth {
+    public function handle( Request $request, Closure $next ): Response {
+        // غير مسجل دخول
+        if ( !Auth::check() ) {
+            return redirect()
+            ->route( 'login' )
+            ->with( 'error', 'You must login first to access this page.' );
         }
+
+        // Admin
+        if ( Auth::user()->role === 'admin' ) {
+            return $next( $request );
+        }
+
+        // User عادي
+        return redirect()
+        ->route( 'home' )
+        ->with( 'error', 'Access denied. You do not have permission to access this page.' );
     }
 }

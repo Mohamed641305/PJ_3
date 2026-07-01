@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,8 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'CheckAuth' => \App\Http\Middleware\CheckAuth::class,
+            'isAdmin'   => \App\Http\Middleware\IsAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+
+        $exceptions->render(function (AuthenticationException $e, $request) {
+            return redirect()->route('login')
+                ->with('error', 'You must login first to access this page.');
+        });
+
     })->create();
